@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { CartContext } from '../CartContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'https://w2w-backend-k76m.onrender.com';
+const API_URL ='https://w2w-backend-k76m.onrender.com';
 
 const Shop = () => {
   const { addToCart } = useContext(CartContext);

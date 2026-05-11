@@ -2,7 +2,9 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from '../CartContext';
 import axios from 'axios';
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'https://w2w-backend-k76m.onrender.com';
+
+// MACHI: Direct-ah Render link-aye kuduthudalam, confusion-ey irukkaadhu
+const API_URL = 'https://w2w-backend-k76m.onrender.com';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -20,12 +22,12 @@ const Login = () => {
     }
 
     try {
+      // Corrected call using template literal with the hardcoded API_URL
       const res = await axios.post(`${API_URL}/api/auth/login`, {
         email,
         password
       });
 
-      // Storage-la details-ah vachikidalam
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('userEmail', res.data.user.email);
       localStorage.setItem('userName', res.data.user.name);
@@ -35,13 +37,9 @@ const Login = () => {
 
       alert(`Welcome back ${res.data.user.name} ✅`);
 
-      // --- MACHI: THE AUTO-NAVIGATE LOGIC ---
-      // Check if the logged-in user is YOU (The Admin)
       if (res.data.user.email === 'thulasirajan663@gmail.com') {
-        console.log("Admin detected! Navigating to Command Center...");
         navigate('/admin'); 
       } else {
-        // Normal users go to shop as usual
         navigate('/shop');
       }
 
@@ -53,11 +51,8 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 font-sans">
       <div className="bg-white p-8 md:p-12 rounded-[3rem] shadow-2xl w-full max-w-md border border-gray-100 relative overflow-hidden">
-        
         <div className="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-bl-full -mr-10 -mt-10"></div>
-        
         <div className="relative text-center mb-10">
-          
           <Link to="/" className="inline-flex flex-col items-center gap-2 mb-6 group hover:scale-110 transition-transform duration-300">
             <div className="bg-green-600 text-white p-4 rounded-2xl shadow-xl group-hover:bg-gray-950 transition-colors">
               <span className="text-4xl">♻️</span>
@@ -67,7 +62,6 @@ const Login = () => {
               <span className="text-[10px] font-black text-green-600 tracking-[0.4em] uppercase">Waste To Worth</span>
             </div>
           </Link>
-
           <h2 className="text-4xl font-black mb-2 text-gray-950 tracking-tighter uppercase italic">
             User <span className="text-green-600">Login</span>
           </h2>

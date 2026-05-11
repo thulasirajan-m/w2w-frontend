@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'https://w2w-backend-k76m.onrender.com';
+const API_URL = 'https://w2w-backend-k76m.onrender.com';
 const Profile = () => {
   const [user, setUser] = useState({
     name: localStorage.getItem('userName') || 'User',

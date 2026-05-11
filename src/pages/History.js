@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { generateGreenHeroCertificate } from '../utils/SustainabilityCertificate';
-const API_URL = process.env.REACT_APP_BACKEND_URL || 'https://w2w-backend-k76m.onrender.com';
+const API_URL = 'https://w2w-backend-k76m.onrender.com';
 const History = () => {
   const [activeTab, setActiveTab] = useState('pickups');
   const [allOrders, setAllOrders] = useState([]); 
