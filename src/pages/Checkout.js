@@ -5,6 +5,9 @@ import autoTable from 'jspdf-autotable';
 import axios from 'axios';
 import { CartContext } from '../CartContext'; 
 
+// MACHI: Indha line dhaan missing. Idhu illadhala dhaan Vercel build fail aachu.
+const API_URL = 'https://w2w-backend-k76m.onrender.com';
+
 const Checkout = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -106,7 +109,6 @@ const Checkout = () => {
   };
 
   const handleOrderNow = async () => {
-    // 1. Basic Validation
     if (!email || !email.includes('@')) {
       alert("Enter a valid email address for the invoice!");
       return;
@@ -116,11 +118,10 @@ const Checkout = () => {
       return;
     }
 
-    // --- MACHI: STRICT PAYMENT VERIFICATION & SECURITY ---
     if (paymentMethod === 'upi') {
       const upiRegex = /^[0-4][0-9]{11}$/; 
       if (!upiRefId) {
-        alert("⚠️  Pay First! please enter Reference ID !");
+        alert("⚠️ Pay First! please enter Reference ID !");
         return;
       }
       if (!upiRegex.test(upiRefId)) {
@@ -138,14 +139,12 @@ const Checkout = () => {
 
     setIsProcessing(true);
 
-    // MACHI: Preparing Secured Order Data
     const orderData = {
       email,
       description: finalDescription,
       amount: finalAmount,
       address,
       paymentMethod,
-      // CARD payment-na dummy ID anupuroam (Security Purpose)
       transactionId: paymentMethod === 'upi' ? upiRefId : `CARD_${Date.now()}`,
       orderType: 'shopping',
       items: isFromCart ? cartItems : [{ name: finalDescription, price: finalAmount, quantity: 1 }]
@@ -154,7 +153,6 @@ const Checkout = () => {
     try {
       await axios.post(`${API_URL}/api/orders`, orderData);
 
-      // MACHI: Discard sensitive info from state after success
       if (paymentMethod === 'card') {
         setCardDetails({ number: '', name: '', expiry: '', cvv: '' });
       }
@@ -166,7 +164,6 @@ const Checkout = () => {
       navigate('/history');
     } catch (err) {
       console.error("Order error:", err);
-      // Backend status 400 error message (like Duplicate ID)
       alert(err.response?.data?.error || "Something went wrong with the order!");
     } finally {
       setIsProcessing(false);
@@ -190,7 +187,6 @@ const Checkout = () => {
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6">
         
         <div className="flex-[2] space-y-6">
-          {/* Contact Section */}
           <div className="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-200">
             <h2 className="text-xl font-black text-gray-800 mb-4 uppercase tracking-tight">Contact Information</h2>
             <input 
@@ -203,7 +199,6 @@ const Checkout = () => {
             />
           </div>
 
-          {/* Shipping Address */}
           <div className="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-200">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-black text-gray-800 uppercase tracking-tight">1. Shipping Address</h2>
@@ -222,10 +217,8 @@ const Checkout = () => {
             )}
           </div>
 
-          {/* Payment Details */}
           <div className="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-200">
             <h2 className="text-xl font-black text-gray-800 mb-6 uppercase tracking-tight">2. Payment details</h2>
-            
             <div className="flex gap-4 mb-6">
                 <button onClick={() => setPaymentMethod('upi')} className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${paymentMethod === 'upi' ? 'bg-green-600 text-white shadow-lg' : 'bg-gray-100 text-gray-400'}`}>UPI / QR Scan</button>
                 <button onClick={() => setPaymentMethod('card')} className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${paymentMethod === 'card' ? 'bg-green-600 text-white shadow-lg' : 'bg-gray-100 text-gray-400'}`}>Card Payment</button>
@@ -289,7 +282,6 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Feedback Section */}
           <div className="bg-white p-5 md:p-6 rounded-2xl shadow-sm border border-gray-200">
             <h2 className="text-xl font-black text-gray-800 mb-4 uppercase tracking-tight">3. Service Feedback</h2>
             <div className="space-y-4">
@@ -308,7 +300,6 @@ const Checkout = () => {
           </div>
         </div>
 
-        {/* Order Summary Sidebar */}
         <div className="lg:w-96">
           <div className="bg-white p-6 rounded-[2rem] shadow-xl border border-gray-100 sticky top-10">
             <h3 className="font-black text-xl mb-6 uppercase tracking-tight text-gray-800 italic">Order Summary</h3>
