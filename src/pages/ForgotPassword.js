@@ -22,7 +22,7 @@ const ForgotPassword = () => {
       alert(res.data.msg);
       setStep(2); // Move to OTP step
     } catch (err) {
-      alert(err.response?.data?.msg || "Something went wrong machi! ❌");
+      alert(err.response?.data?.msg || "Something went wrong! ❌");
     } finally {
       setLoading(false);
     }
@@ -41,7 +41,7 @@ const ForgotPassword = () => {
       alert(res.data.msg);
       navigate('/login'); // Redirect to login
     } catch (err) {
-      alert(err.response?.data?.msg || "Invalid OTP or error machi! ❌");
+      alert(err.response?.data?.msg || "Invalid OTP or error ❌");
     } finally {
       setLoading(false);
     }

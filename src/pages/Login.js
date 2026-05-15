@@ -91,10 +91,10 @@ const Login = () => {
               <label className="block text-gray-400 font-black uppercase text-[9px] tracking-widest">
                 Secret Password
               </label>
-              {/* MACHI: Added Forgot Password Link Here */}
+              {/* MACHI: Forgot Password Link correctly integrated */}
               <Link 
                 to="/forgot-password" 
-                className="text-[9px] font-black text-green-600 uppercase tracking-widest hover:text-orange-500 transition-colors"
+                className="text-[9px] font-black text-green-600 uppercase tracking-widest hover:text-orange-500 transition-colors underline decoration-1 underline-offset-2"
               >
                 Forgot Password?
               </Link>

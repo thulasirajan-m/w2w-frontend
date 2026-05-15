@@ -30,7 +30,7 @@ const GlassCalculator = () => {
     }
 
     if (weight <= 0) {
-      alert("Machi, weight konjam enter pannu da!");
+      alert("Enter a valid weight!");
       return;
     }
 
