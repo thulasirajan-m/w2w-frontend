@@ -23,7 +23,7 @@ import Checkout from './pages/Checkout';
 import PickupForm from './pages/PickupForm';
 import AdminDashboard from './pages/AdminDashboard'; 
 import Profile from './pages/Profile'; 
-
+import ForgotPassword from './pages/ForgotPassword';
 function App() {
   return (
     <CartProvider>
@@ -42,7 +42,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/history" element={<History />} />
             <Route path="/profile" element={<Profile />} />
-
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             {/* Sustainability Calculators */}
             <Route path="/e-waste-calculator" element={<EWasteCalculator />} />
             <Route path="/glass-calculator" element={<GlassCalculator />} />

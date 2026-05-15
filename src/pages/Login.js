@@ -87,9 +87,18 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-gray-400 font-black uppercase text-[9px] tracking-widest mb-2 ml-1">
-              Secret Password
-            </label>
+            <div className="flex justify-between items-center mb-2 ml-1">
+              <label className="block text-gray-400 font-black uppercase text-[9px] tracking-widest">
+                Secret Password
+              </label>
+              {/* MACHI: Added Forgot Password Link Here */}
+              <Link 
+                to="/forgot-password" 
+                className="text-[9px] font-black text-green-600 uppercase tracking-widest hover:text-orange-500 transition-colors"
+              >
+                Forgot Password?
+              </Link>
+            </div>
             <input 
               type="password" 
               value={password}
