@@ -58,7 +58,7 @@ const PickupForm = () => {
       // Backend call
       await axios.post(`${API_URL}/api/orders`, pickupData);
 
-      alert(`Machi! Pickup Scheduled for ${wasteType} ✅\nData stored for: ${formData.email}`);
+      alert(`Pickup Scheduled for ${wasteType} ✅\nData stored for: ${formData.email}`);
       
       // History-ku redirect aagumbodhu logic refresh aagum
       navigate('/history');
