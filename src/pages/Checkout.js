@@ -5,7 +5,6 @@ import autoTable from 'jspdf-autotable';
 import axios from 'axios';
 import { CartContext } from '../CartContext'; 
 
-// MACHI: Indha line dhaan missing. Idhu illadhala dhaan Vercel build fail aachu.
 const API_URL = 'https://w2w-backend-k76m.onrender.com';
 
 const Checkout = () => {
@@ -25,12 +24,12 @@ const Checkout = () => {
     ? `Bulk Order (${cartItemsCount} Items)` 
     : (selectedProduct ? selectedProduct.name : "Recycled Materials Bundle");
 
-  // State Management
+  // State Management - Address initialized as completely empty string
   const [email, setEmail] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('upi'); 
-  const [isEditingAddress, setIsEditingAddress] = useState(false);
-  const [address, setAddress] = useState("VIJAYALAKSHMI matchworks, ANNA NEW STREET, KALUGUMALAI, TAMIL NADU, 628552, India");
-  const [tempAddress, setTempAddress] = useState(address);
+  const [isEditingAddress, setIsEditingAddress] = useState(true); // Keeping true so consumer can type directly
+  const [address, setAddress] = useState("");
+  const [tempAddress, setTempAddress] = useState("");
   const [userReview, setUserReview] = useState('');
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   
@@ -69,7 +68,7 @@ const Checkout = () => {
       doc.setTextColor(0);
       doc.text("Delivery Address:", 14, 45);
       doc.setFontSize(9);
-      doc.text(address, 14, 50, { maxWidth: 180 });
+      doc.text(address || "No address provided", 14, 50, { maxWidth: 180 });
 
       let tableBody = [];
       if (isFromCart && cartItems.length > 0) {
@@ -111,6 +110,10 @@ const Checkout = () => {
   const handleOrderNow = async () => {
     if (!email || !email.includes('@')) {
       alert("Enter a valid email address for the invoice!");
+      return;
+    }
+    if (!address || address.trim() === "") {
+      alert("Please provide a valid shipping address before checking out!");
       return;
     }
     if (!paymentMethod) {
@@ -160,7 +163,7 @@ const Checkout = () => {
       generateInvoice(upiRefId || 'CARD_PAYMENT'); 
       if (isFromCart) clearCart();
 
-      alert(`Order Successful Machi! ✅ Invoice downloaded. Admin will verify soon.`);
+      alert(`Order Successful! ✅ Invoice downloaded. Admin will verify soon.`);
       navigate('/history');
     } catch (err) {
       console.error("Order error:", err);
@@ -172,7 +175,7 @@ const Checkout = () => {
 
   const handleReviewSubmit = () => {
     if (userReview.trim().length < 5) {
-      alert("Machi, feedback konjam nalla kodu!");
+      alert("Please provide more substantial feedback!");
       return;
     }
     setReviewSubmitted(true);
@@ -206,14 +209,22 @@ const Checkout = () => {
             </div>
             {isEditingAddress ? (
               <div className="space-y-3">
-                <textarea className="w-full p-4 border-2 border-gray-100 rounded-xl text-sm outline-none focus:border-orange-500" rows="3" value={tempAddress} onChange={(e) => setTempAddress(e.target.value)} />
+                <textarea 
+                  className="w-full p-4 border-2 border-gray-100 rounded-xl text-sm outline-none focus:border-orange-500 font-medium" 
+                  rows="3" 
+                  placeholder="Type your full delivery address here..."
+                  value={tempAddress} 
+                  onChange={(e) => setTempAddress(e.target.value)} 
+                />
                 <div className="flex gap-2">
                   <button onClick={() => { setAddress(tempAddress); setIsEditingAddress(false); }} className="bg-orange-500 text-white px-6 py-2 rounded-xl text-sm font-black shadow-md">Save</button>
                   <button onClick={() => setIsEditingAddress(false)} className="bg-gray-200 text-gray-600 px-6 py-2 rounded-xl text-sm font-black">Cancel</button>
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-gray-600 font-medium leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">{address}</p>
+              <p className="text-sm text-gray-600 font-medium leading-relaxed bg-gray-50 p-4 rounded-xl border border-gray-100">
+                {address || <span className="text-red-400 italic">No address provided yet. Click edit to add.</span>}
+              </p>
             )}
           </div>
 
@@ -227,7 +238,7 @@ const Checkout = () => {
 
             <div className="space-y-4">
               {paymentMethod === 'upi' && (
-                <div className="text-center p-6 bg-green-50 rounded-2xl border-2 border-dashed border-green-200 animate-in fade-in duration-500">
+                <div className="text-center p-6 bg-green-50 rounded-2xl border-2 border-dashed border-green-200">
                   <img 
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(
                       `upi://pay?pa=rajanthlasi662@okicici&pn=W2W Store&am=${finalAmount}&cu=INR&tn=W2W Order Payment`
@@ -253,7 +264,7 @@ const Checkout = () => {
               )}
 
               {paymentMethod === 'card' && (
-                <div className="mt-6 space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                <div className="mt-6 space-y-4">
                   <input 
                     type="text" name="number" placeholder="Card Number (16 Digits)" 
                     className="w-full p-4 border rounded-xl text-sm outline-none focus:border-green-500 font-bold"
@@ -275,8 +286,8 @@ const Checkout = () => {
               )}
               
               {paymentMethod === 'cod' && (
-                <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100 text-center animate-in fade-in duration-500">
-                  <p className="text-sm font-bold text-orange-800">cash payment at doorstep! No ID required for COD. 🚚</p>
+                <div className="p-6 bg-orange-50 rounded-2xl border border-orange-100 text-center">
+                  <p className="text-sm font-bold text-orange-800">Cash payment at doorstep! No ID required for COD. 🚚</p>
                 </div>
               )}
             </div>
