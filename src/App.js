@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Global State Provider
@@ -24,12 +24,35 @@ import PickupForm from './pages/PickupForm';
 import AdminDashboard from './pages/AdminDashboard'; 
 import Profile from './pages/Profile'; 
 import ForgotPassword from './pages/ForgotPassword';
+
 function App() {
+  // Initialize state based on previous storage or browser preferences
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
+
+  // Synchronize state mutations directly with HTML document element structure
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (darkMode) {
+      root.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
+
   return (
     <CartProvider>
       <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Navbar />
+        {/* Top-level structure container adapts seamlessly to theme variations with strict transition metrics */}
+        <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300">
+          
+          {/* Passing global theme controller values into navigation bar context */}
+          <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
+          
           <Routes>
             {/* Essential Routes */}
             <Route path="/" element={<Home />} />
@@ -43,6 +66,7 @@ function App() {
             <Route path="/history" element={<History />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            
             {/* Sustainability Calculators */}
             <Route path="/e-waste-calculator" element={<EWasteCalculator />} />
             <Route path="/glass-calculator" element={<GlassCalculator />} />
