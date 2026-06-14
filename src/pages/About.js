@@ -94,7 +94,7 @@ const About = () => {
             <div className="bg-white dark:bg-zinc-950 rounded-3xl border border-gray-100 dark:border-zinc-800/50 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
               <div className="h-44 overflow-hidden relative">
                 <img 
-                  src="https://images.unsplash.com/photo-1566847438217-76e82d383f84?auto=format&fit=crop&q=80&w=400" 
+                  src="https://plus.unsplash.com/premium_photo-1712328581716-49b75fdc1faf?q=80&w=400&auto=format&fit=crop"
                   alt="Modern sustainable green cityscape innovation green india" 
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
