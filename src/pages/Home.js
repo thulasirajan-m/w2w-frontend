@@ -57,61 +57,77 @@ const Home = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
-          {/* Glass Collection */}
+          {/* Glass Collection - Broken Glass Focus */}
           <Link to="/glass-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&q=80&w=400" alt="Glass recycling bottles" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+              <img 
+                src="https://images.unsplash.com/photo-1488149048941-581936ec60a1?auto=format&fit=crop&q=80&w=400" 
+                alt="Broken glass shards collection recycling" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">🍾</div>
             </div>
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Glass Collection</h3>
-                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Give us your waste glass bottles and jars. We collect and pay you the fair market value based on strict weight indices.</p>
+                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Give us your waste glass bottles, jars, and broken glass fragments. We collect and pay you the fair market value based on strict weight indices.</p>
               </div>
               <span className="text-xs font-black uppercase text-green-600 dark:text-green-400 tracking-widest mt-6 group-hover:translate-x-2 transition-transform block">Calculate Impact &rarr;</span>
             </div>
           </Link>
 
-          {/* Fabric Collection */}
+          {/* Fabric Collection - Recycled Fabrics Pile */}
           <Link to="/fabric-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1542435503-956c469947f6?auto=format&fit=crop&q=80&w=400" alt="Fabric materials textiles" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+              <img 
+                src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=400" 
+                alt="Fabric clothing garments scrap pile" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">👖</div>
             </div>
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Fabric Materials</h3>
-                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Provide your clean, old fabrics and denim. We recycle them responsibly into functional textiles and reward you per kg.</p>
+                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Provide your clean old fabrics, worn-out garments, and denim rags. We recycle them responsibly into functional textiles and reward you per kg.</p>
               </div>
               <span className="text-xs font-black uppercase text-green-600 dark:text-green-400 tracking-widest mt-6 group-hover:translate-x-2 transition-transform block">Calculate Impact &rarr;</span>
             </div>
           </Link>
 
-          {/* Metal Collection */}
+          {/* Metal Collection - Crushed & Sorted Metal Scraps */}
           <Link to="/metal-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1505705694340-019e1e335916?auto=format&fit=crop&q=80&w=400" alt="Metal Scraps industrial" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+              <img 
+                src="https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=400" 
+                alt="Industrial metal scraps sorted pile iron copper" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">⚙️</div>
             </div>
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Metal Scraps</h3>
-                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Gather your household or industrial metal materials. We weigh it transparently and issue financial compensations instantly.</p>
+                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Gather your household iron waste, aluminum cans, or industrial metal materials. We weigh it transparently and issue financial compensations instantly.</p>
               </div>
               <span className="text-xs font-black uppercase text-green-600 dark:text-green-400 tracking-widest mt-6 group-hover:translate-x-2 transition-transform block">Calculate Impact &rarr;</span>
             </div>
           </Link>
           
-          {/* E-Waste Category */}
+          {/* E-Waste Category - Fixed Electronic Assets */}
           <Link to="/e-waste-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
-              <img src="https://images.unsplash.com/photo-1550009158-9ebf6d2d216c?auto=format&fit=crop&q=80&w=400" alt="Electronic devices components ewaste" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"/>
+              <img 
+                src="https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&q=80&w=400" 
+                alt="Electronic scrap waste circuitry boards mobile devices" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">📱</div>
             </div>
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
                 <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">E-Waste Metals</h3>
-                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Old smartphones and tablets are valuable. We safely process them to extract precious components like copper and gold.</p>
+                <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Old smartphones, discarded circuit boards, and dead tablets are valuable. We safely process them to extract precious components like copper and gold.</p>
               </div>
               <span className="text-xs font-black uppercase text-green-600 dark:text-green-400 tracking-widest mt-6 group-hover:translate-x-2 transition-transform block">Calculate Impact &rarr;</span>
             </div>
