@@ -61,7 +61,7 @@ const Home = () => {
           <Link to="/glass-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
-                src="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&q=80&w=400" 
+                src="https://images.unsplash.com/photo-1569075857556-6e707cccc11f?q=80&w=400&auto=format&fit=crop"
                 alt="Broken glass shards and bottles recycling bin" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
