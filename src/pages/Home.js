@@ -80,7 +80,7 @@ const Home = () => {
           <Link to="/fabric-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
-                src="https://images.unsplash.com/photo-1542435503-956c469947f6?auto=format&fit=crop&q=80&w=400" 
+                src="https://plus.unsplash.com/premium_photo-1674719144083-444cfd29c520?q=80&w=400&auto=format&fit=crop"
                 alt="Stacked denim fabrics and textile garments" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
