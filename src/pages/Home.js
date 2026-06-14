@@ -50,19 +50,19 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- COLLECTION CATEGORIES GRID WITH CARDS IMAGES --- */}
+      {/* --- COLLECTION CATEGORIES GRID WITH CORRECTED PRODUCTION IMAGES --- */}
       <section className="max-w-7xl mx-auto py-24 px-6">
         <h2 className="text-3xl md:text-4xl font-black text-center mb-4 text-gray-900 dark:text-white uppercase tracking-tight">Our Collection Categories</h2>
         <p className="text-center text-gray-500 dark:text-zinc-400 mb-16 font-medium">Select a category to evaluate your structural metrics and generate immediate evaluations.</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           
-          {/* Glass Collection - Broken Glass Focus */}
+          {/* Glass Collection - FIXED IMAGE */}
           <Link to="/glass-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
-                src="https://images.unsplash.com/photo-1488149048941-581936ec60a1?auto=format&fit=crop&q=80&w=400" 
-                alt="Broken glass shards collection recycling" 
+                src="https://images.unsplash.com/photo-1605647540924-852290f6b0d5?auto=format&fit=crop&q=80&w=400" 
+                alt="Broken glass shards and bottles recycling bin" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">🍾</div>
@@ -76,12 +76,12 @@ const Home = () => {
             </div>
           </Link>
 
-          {/* Fabric Collection - Recycled Fabrics Pile */}
+          {/* Fabric Collection - FIXED IMAGE */}
           <Link to="/fabric-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
-                src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=400" 
-                alt="Fabric clothing garments scrap pile" 
+                src="https://images.unsplash.com/photo-1542435503-956c469947f6?auto=format&fit=crop&q=80&w=400" 
+                alt="Stacked denim fabrics and textile garments" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">👖</div>
@@ -95,12 +95,12 @@ const Home = () => {
             </div>
           </Link>
 
-          {/* Metal Collection - Crushed & Sorted Metal Scraps */}
+          {/* Metal Collection - FIXED IMAGE */}
           <Link to="/metal-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
                 src="https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=400" 
-                alt="Industrial metal scraps sorted pile iron copper" 
+                alt="Crushed sorted metal scrap wires and cylinders" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">⚙️</div>
@@ -114,12 +114,12 @@ const Home = () => {
             </div>
           </Link>
           
-          {/* E-Waste Category - Fixed Electronic Assets */}
+          {/* E-Waste Category - FIXED IMAGE AND LOGIC */}
           <Link to="/e-waste-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
-                src="https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&q=80&w=400" 
-                alt="Electronic scrap waste circuitry boards mobile devices" 
+                src="https://images.unsplash.com/photo-1550009158-9ebf6d2d216c?auto=format&fit=crop&q=80&w=400" 
+                alt="Electronic waste circuit boards and mobile chips components" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute top-4 right-4 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md px-3 py-1 rounded-xl text-2xl">📱</div>
