@@ -126,7 +126,7 @@ const Home = () => {
             </div>
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
-                <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">E-Waste Materials</h3>
+                <h3 className="text-xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">E-Waste Metals</h3>
                 <p className="text-gray-600 dark:text-zinc-400 text-sm font-medium leading-relaxed">Old smartphones, discarded circuit boards, and dead tablets are valuable. We safely process them to extract precious components like copper and gold.</p>
               </div>
               <span className="text-xs font-black uppercase text-green-600 dark:text-green-400 tracking-widest mt-6 group-hover:translate-x-2 transition-transform block">Calculate Impact &rarr;</span>
