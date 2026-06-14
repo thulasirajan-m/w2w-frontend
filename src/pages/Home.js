@@ -99,7 +99,7 @@ const Home = () => {
           <Link to="/metal-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
-                src="https://images.unsplash.com/photo-1722695510527-cc033e43be1b?q=80&w=1170&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1569075857556-6e707cccc11f?q=80&w=400&auto=format&fit=crop"
                 alt="Crushed sorted metal scrap wires and cylinders" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
