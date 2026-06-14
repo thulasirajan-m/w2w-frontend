@@ -118,7 +118,7 @@ const Home = () => {
           <Link to="/e-waste-calculator" className="bg-gray-50 dark:bg-zinc-900 rounded-[2rem] border border-gray-100 dark:border-zinc-800 hover:shadow-2xl transition-all duration-300 overflow-hidden flex flex-col group">
             <div className="h-48 overflow-hidden relative">
               <img 
-                src="https://images.unsplash.com/photo-1717667745934-53091623e8ee?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src="https://images.unsplash.com/photo-1612965110667-4175024b0dcc?q=80&w=400&auto=format&fit=crop"
                 alt="Electronic waste circuit boards and mobile chips components" 
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
