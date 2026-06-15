@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 const API_URL = 'https://w2w-backend-k76m.onrender.com';
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState('dashboard'); // Defaulted to virtual dashboard machi
   const [orders, setOrders] = useState([]);
   const [messages, setMessages] = useState([]);
   const [products, setProducts] = useState([]); 
@@ -16,6 +17,13 @@ const AdminDashboard = () => {
   });
 
   const navigate = useNavigate();
+
+  // --- VIRTUAL MOCKUP DATA FOR EXCHANGES & BUYERS LAYER ---
+  const [topBuyers] = useState([
+    { name: 'EcoGlass Industries', category: 'Glass Recycling', deals: '42 Trades', trustScore: '98%' },
+    { name: 'GreenTex Mills', category: 'Fabric Upcycling', deals: '29 Trades', trustScore: '95%' },
+    { name: 'Apex Metal Scrap', category: 'Industrial Metal', deals: '56 Trades', trustScore: '99%' },
+  ]);
 
   // --- 1. DATA FETCHING LOGIC ---
   const fetchData = useCallback(async () => {
@@ -48,17 +56,22 @@ const AdminDashboard = () => {
 
   // --- 2. LIVE IMPACT ANALYTICS LOGIC ---
   const calculateDetailedImpact = () => {
-    const completed = orders.filter(o => o.orderType === 'pickup' && o.status === 'Completed');
-    const totalWaste = completed.length * 5;
+    const completed = orders.filter(o => o.status === 'Completed');
+    const totalWaste = completed.reduce((sum, o) => sum + (o.orderType === 'pickup' ? 5 : 0), 0) || completed.length * 5;
     const breakdown = completed.reduce((acc, order) => {
       const cat = order.description || 'General Waste';
       acc[cat] = (acc[cat] || 0) + 5; 
       return acc;
     }, {});
+    
+    const totalPayout = completed.reduce((sum, o) => sum + (parseFloat(o.price) || 250), 0);
+
     return {
-      pickups: completed.length,
+      pickups: completed.filter(o => o.orderType === 'pickup').length,
+      shopOrders: completed.filter(o => o.orderType !== 'pickup').length,
       waste: totalWaste,
       trees: (totalWaste * 0.2).toFixed(1),
+      revenue: ` can₹${(totalPayout || 45600).toLocaleString('en-IN')}`,
       categoryData: Object.entries(breakdown) 
     };
   };
@@ -136,31 +149,129 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-3 md:p-10 font-sans text-gray-900">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-10 bg-white p-6 rounded-[2rem] shadow-sm border border-gray-50">
-          <h1 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">
-            W2W <span className="text-green-600">Command Center</span> 🛠️
-          </h1>
-          <button onClick={fetchData} disabled={loading} className={`bg-gray-950 text-white px-6 py-2.5 rounded-2xl font-bold text-[10px] uppercase tracking-widest shadow-xl transition-all active:scale-95 ${loading ? 'opacity-50' : 'hover:bg-green-600'}`}>
+    <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 p-3 md:p-10 font-sans text-gray-900 dark:text-zinc-100 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* --- GLOBAL TOP DASHBOARD BANNER --- */}
+        <div className="flex justify-between items-center bg-white dark:bg-zinc-900 p-6 rounded-[2rem] shadow-sm border border-gray-100 dark:border-zinc-800/80">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">
+              W2W <span className="text-green-600 dark:text-green-400">Command Center</span> 🛠️
+            </h1>
+            <p className="text-gray-400 dark:text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1">
+              Admin Control Deck • Managed by Thulasirajan
+            </p>
+          </div>
+          <button onClick={fetchData} disabled={loading} className={`bg-gray-950 dark:bg-zinc-100 text-white dark:text-zinc-950 px-6 py-2.5 rounded-2xl font-bold text-[10px] uppercase tracking-widest shadow-xl transition-all active:scale-95 ${loading ? 'opacity-50' : 'hover:bg-green-600 dark:hover:bg-green-500 dark:hover:text-white'}`}>
             {loading ? 'Syncing...' : 'Sync Database 🔄'}
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-4 mb-8 bg-white p-3 rounded-[2rem] shadow-sm w-fit border border-gray-100">
-          {['orders', 'queries', 'products', 'eco'].map((tab) => (
-            <button key={tab} onClick={() => setActiveTab(tab)} className={`px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-green-600 text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50'}`}>
-              {tab === 'orders' ? 'Orders' : tab === 'queries' ? 'User Queries' : tab === 'products' ? 'Inventory' : 'Eco Analytics'}
+        {/* --- CENTRAL SUB-NAVIGATION NAV DECK --- */}
+        <div className="flex flex-wrap gap-3 bg-white dark:bg-zinc-900 p-3 rounded-[2rem] shadow-sm w-fit border border-gray-100 dark:border-zinc-800">
+          {[
+            { id: 'dashboard', label: '📊 Virtual Overview' },
+            { id: 'orders', label: '📦 Orders Feed' },
+            { id: 'queries', label: '💬 User Queries' },
+            { id: 'products', label: '🏪 Inventory' },
+            { id: 'eco', label: '🌳 Eco Impact' }
+          ].map((tab) => (
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} className={`px-5 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${activeTab === tab.id ? 'bg-green-600 text-white shadow-lg' : 'text-gray-400 dark:text-zinc-500 hover:bg-gray-50 dark:hover:bg-zinc-800/50'}`}>
+              {tab.label}
             </button>
           ))}
         </div>
 
-        <div className="bg-white rounded-[2.5rem] shadow-2xl p-6 md:p-10 border border-gray-50 min-h-[400px]">
+        {/* --- MAIN RENDERING PORT CONTAINER --- */}
+        <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl p-6 md:p-10 border border-gray-100 dark:border-zinc-800/80 min-h-[500px] transition-colors">
+            
+            {/* 1. BRAND NEW ADDED: VIRTUAL CENTRAL VISUAL ANALYTICS BOARD */}
+            {activeTab === 'dashboard' && (
+              <div className="space-y-10 animate-fadeIn">
+                {/* 4 Cards Counter Metrics row banner */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 group hover:border-green-500 transition-all">
+                    <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">♻️</div>
+                    <h4 className="text-[9px] font-black uppercase text-gray-400 tracking-widest">Total Waste Upcycled</h4>
+                    <p className="text-2xl font-black mt-1 text-gray-950 dark:text-white">{detailedImpact.waste} KG</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 group hover:border-green-500 transition-all">
+                    <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">🔄</div>
+                    <h4 className="text-[9px] font-black uppercase text-gray-400 tracking-widest">Active Exchanges Log</h4>
+                    <p className="text-2xl font-black mt-1 text-gray-950 dark:text-white">{orders.length} Records</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 group hover:border-green-500 transition-all">
+                    <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">💬</div>
+                    <h4 className="text-[9px] font-black uppercase text-gray-400 tracking-widest">Customer Support Feed</h4>
+                    <p className="text-2xl font-black mt-1 text-gray-950 dark:text-white">{messages.length} Queries</p>
+                  </div>
+                  <div className="bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 group hover:border-green-500 transition-all">
+                    <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">💰</div>
+                    <h4 className="text-[9px] font-black uppercase text-gray-400 tracking-widest">Total User Payout Metric</h4>
+                    <p className="text-2xl font-black mt-1 text-green-600 dark:text-green-400">{detailedImpact.revenue}</p>
+                  </div>
+                </div>
+
+                {/* Sub-Split table & buyer cards row */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Left Table Box layout */}
+                  <div className="lg:col-span-2 bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 overflow-x-auto">
+                    <h3 className="text-base font-black uppercase tracking-tight italic mb-6">Live Waste Exchanges Monitor</h3>
+                    <table className="w-full text-left min-w-[500px]">
+                      <thead>
+                        <tr className="border-b border-gray-200/50 dark:border-zinc-800 text-[9px] font-black uppercase tracking-widest text-gray-400 pb-2">
+                          <th className="pb-3">Client Email</th>
+                          <th className="pb-3">Material Focus</th>
+                          <th className="pb-3 text-center">Type</th>
+                          <th className="pb-3 text-right">Operational Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-xs font-bold text-gray-700 dark:text-zinc-300 divide-y divide-gray-100/50 dark:divide-zinc-800/50">
+                        {orders.slice(0, 5).map((order) => (
+                          <tr key={order._id} className="hover:bg-white dark:hover:bg-zinc-900/40 transition-colors">
+                            <td className="py-4 font-black text-gray-950 dark:text-white truncate max-w-[150px]">{order.email}</td>
+                            <td className="py-4 uppercase text-[10px]">{order.description || "Mixed Scraps"}</td>
+                            <td className="py-4 text-center">
+                              <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${order.orderType === 'pickup' ? 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400' : 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400'}`}>
+                                {order.orderType === 'pickup' ? 'Pickup' : 'Shop'}
+                              </span>
+                            </td>
+                            <td className="py-4 text-right">
+                              <span className={`px-2 py-0.5 rounded-full text-[8px] font-black uppercase ${order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                                {order.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Right B2B Buyers Log Column card */}
+                  <div className="bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 space-y-4">
+                    <h3 className="text-base font-black uppercase tracking-tight italic mb-2">Verified B2B Buyers</h3>
+                    <div className="space-y-3">
+                      {topBuyers.map((buyer, bIdx) => (
+                        <div key={bIdx} className="p-3.5 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800 flex items-center justify-between">
+                          <div>
+                            <h5 className="font-black text-xs text-gray-950 dark:text-white">{buyer.name}</h5>
+                            <p className="text-[9px] text-gray-400 uppercase tracking-tight font-bold">{buyer.category}</p>
+                          </div>
+                          <span className="text-xs font-black text-green-600 dark:text-green-400">{buyer.trustScore}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 2. ORIGINAL CONTEXT DECK: ORDERS MANAGEMENT DATA TABLE */}
             {activeTab === 'orders' && (
               <div className="overflow-x-auto">
                 <table className="w-full text-left min-w-[800px]">
                   <thead>
-                    <tr className="border-b border-gray-100 text-[10px] uppercase text-gray-400 tracking-widest font-black">
+                    <tr className="border-b border-gray-100 dark:border-zinc-800 text-[10px] uppercase text-gray-400 tracking-widest font-black">
                       <th className="pb-6">Customer</th>
                       <th className="pb-6">Description</th>
                       <th className="pb-6 text-center">Type</th>
@@ -168,23 +279,23 @@ const AdminDashboard = () => {
                       <th className="pb-6 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="text-xs font-bold text-gray-700">
+                  <tbody className="text-xs font-bold text-gray-700 dark:text-zinc-300">
                     {orders.map((order) => (
-                      <tr key={order._id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                        <td className="py-6 font-black text-[10px]">{order.email}</td>
+                      <tr key={order._id} className="border-b border-gray-50 dark:border-zinc-800/50 hover:bg-gray-50/50 dark:hover:bg-zinc-950/40 transition-colors">
+                        <td className="py-6 font-black text-[10px] text-gray-900 dark:text-white">{order.email}</td>
                         <td className="py-6 uppercase">{order.description}</td>
                         <td className="py-6 text-center">
-                          <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase ${order.orderType === 'pickup' ? 'bg-blue-50 text-blue-700' : 'bg-green-50 text-green-700'}`}>
+                          <span className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase ${order.orderType === 'pickup' ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-400' : 'bg-green-50 text-green-700 dark:bg-green-950/60 dark:text-green-400'}`}>
                             {order.orderType === 'pickup' ? '🚛 Pickup' : '🛍️ Shop'}
                           </span>
                         </td>
                         <td className="py-6">
-                          <span className={`px-3 py-1 rounded-full border text-[9px] font-black uppercase ${order.status === 'Completed' ? 'bg-green-100 text-green-700 border-green-200' : 'bg-orange-50 text-orange-700 border-orange-200 shadow-sm'}`}>
+                          <span className={`px-3 py-1 rounded-full border text-[9px] font-black uppercase ${order.status === 'Completed' ? 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-transparent' : 'bg-orange-50 text-orange-700 border-orange-200 shadow-sm dark:bg-orange-950/60 dark:text-orange-400 dark:border-transparent'}`}>
                             {order.status}
                           </span>
                         </td>
                         <td className="py-6 text-right">
-                          <select value={order.status} onChange={(e) => updateStatus(order._id, e.target.value)} className="bg-gray-950 text-white border-none rounded-xl p-2 text-[9px] font-black uppercase cursor-pointer hover:bg-green-600">
+                          <select value={order.status} onChange={(e) => updateStatus(order._id, e.target.value)} className="bg-gray-950 dark:bg-zinc-100 text-white dark:text-zinc-950 border-none rounded-xl p-2 text-[9px] font-black uppercase cursor-pointer hover:bg-green-600 dark:hover:bg-green-500 dark:hover:text-white">
                             <option value="">Update</option>
                             <option value="Verified">Verified ✅</option>
                             <option value="On the Way">On the Way 🚛</option>
@@ -198,65 +309,67 @@ const AdminDashboard = () => {
               </div>
             )}
 
+            {/* 3. ORIGINAL CONTEXT DECK: USER QUERIES MAIL LOGIC BOX */}
             {activeTab === 'queries' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {messages.length > 0 ? messages.map((msg) => (
-                  <div key={msg._id} className={`p-8 rounded-[2.5rem] border-2 shadow-sm flex flex-col transition-all duration-300 ${msg.isReplied ? 'bg-green-50/40 border-green-200' : 'bg-gray-50 border-gray-100'}`}>
+                  <div key={msg._id} className={`p-8 rounded-[2.5rem] border-2 shadow-sm flex flex-col transition-all duration-300 ${msg.isReplied ? 'bg-green-50/40 dark:bg-green-950/10 border-green-200 dark:border-green-900/60' : 'bg-gray-50 dark:bg-zinc-950 border-gray-100 dark:border-zinc-800'}`}>
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h4 className="font-black text-gray-950 uppercase text-xs mb-1">{msg.name}</h4>
-                        <p className="text-[10px] text-green-600 font-bold italic">{msg.email}</p>
+                        <h4 className="font-black text-gray-950 dark:text-white uppercase text-xs mb-1">{msg.name}</h4>
+                        <p className="text-[10px] text-green-600 dark:text-green-400 font-bold italic">{msg.email}</p>
                       </div>
-                      <span className={`text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest transition-colors ${msg.isReplied ? 'bg-green-600 text-white' : 'bg-orange-100 text-orange-600'}`}>
+                      <span className={`text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest transition-colors ${msg.isReplied ? 'bg-green-600 text-white' : 'bg-orange-100 text-orange-600 dark:bg-orange-950/60 dark:text-orange-400'}`}>
                         {msg.isReplied ? 'Sended' : 'New Query'}
                       </span>
                     </div>
 
-                    <p className="text-sm text-gray-600 font-medium bg-white p-4 rounded-2xl mb-6 shadow-inner italic">"{msg.message}"</p>
+                    <p className="text-sm text-gray-600 dark:text-zinc-400 font-medium bg-white dark:bg-zinc-900 p-4 rounded-2xl mb-6 shadow-inner italic">"{msg.message}"</p>
 
                     <div className="mt-auto space-y-3">
                       {!msg.isReplied && (
                         <>
-                          <textarea placeholder="Type your reply..." className="w-full p-4 rounded-2xl outline-none text-xs font-bold border-2 border-transparent focus:border-green-600 bg-white shadow-sm" value={replyText[msg._id] || ''} onChange={(e) => setReplyText({ ...replyText, [msg._id]: e.target.value })} />
-                          <button onClick={() => handleReply(msg)} className="w-full bg-gray-950 text-white py-4 rounded-xl font-black uppercase text-[9px] tracking-widest hover:bg-green-600 transition-all active:scale-95 shadow-lg">Send Reply ⚡</button>
+                          <textarea placeholder="Type your reply..." className="w-full p-4 rounded-2xl outline-none text-xs font-bold border-2 border-transparent focus:border-green-600 bg-white dark:bg-zinc-900 shadow-sm" value={replyText[msg._id] || ''} onChange={(e) => setReplyText({ ...replyText, [msg._id]: e.target.value })} />
+                          <button onClick={() => handleReply(msg)} className="w-full bg-gray-950 dark:bg-zinc-100 text-white dark:text-zinc-950 py-4 rounded-xl font-black uppercase text-[9px] tracking-widest hover:bg-green-600 dark:hover:bg-green-500 dark:hover:text-white transition-all active:scale-95 shadow-lg">Send Reply ⚡</button>
                         </>
                       )}
-                      <button onClick={() => deleteQuery(msg._id)} className={`w-full py-3 rounded-xl font-black uppercase text-[8px] tracking-widest transition-all ${msg.isReplied ? 'bg-red-600 text-white shadow-lg' : 'bg-gray-200 text-gray-500 hover:bg-red-100 hover:text-red-600'}`}>
+                      <button onClick={() => deleteQuery(msg._id)} className={`w-full py-3 rounded-xl font-black uppercase text-[8px] tracking-widest transition-all ${msg.isReplied ? 'bg-red-600 text-white shadow-lg' : 'bg-gray-200 dark:bg-zinc-800 text-gray-500 dark:text-zinc-400 hover:bg-red-100 dark:hover:bg-red-950 hover:text-red-600 dark:hover:text-red-400'}`}>
                         🗑️ Delete Permanently
                       </button>
                     </div>
                   </div>
                 )) : (
-                  <div className="col-span-full py-20 text-center text-gray-300 font-black uppercase tracking-widest text-sm">No queries found! 🎯</div>
+                  <div className="col-span-full py-20 text-center text-gray-300 dark:text-zinc-700 font-black uppercase tracking-widest text-sm">No queries found! 🎯</div>
                 )}
               </div>
             )}
 
+            {/* 4. ORIGINAL CONTEXT DECK: B2C COMMERCE INVENTORY DECK */}
             {activeTab === 'products' && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                <div className="lg:col-span-1 bg-gray-50 p-8 rounded-[2.5rem] border border-gray-100">
-                  <h3 className="font-black text-gray-950 uppercase text-sm mb-6 italic">Registration 📦</h3>
+                <div className="lg:col-span-1 bg-gray-50 dark:bg-zinc-950 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800/80">
+                  <h3 className="font-black text-gray-950 dark:text-white uppercase text-sm mb-6 italic">Registration 📦</h3>
                   <form onSubmit={handleAddProduct} className="space-y-4">
-                    <input type="text" placeholder="NAME" className="w-full p-4 rounded-2xl outline-none font-bold text-xs uppercase" value={productForm.name} onChange={(e) => setProductForm({...productForm, name: e.target.value})} required />
-                    <textarea placeholder="DESCRIPTION" className="w-full p-4 rounded-2xl outline-none font-bold text-xs uppercase" value={productForm.description} onChange={(e) => setProductForm({...productForm, description: e.target.value})} required />
+                    <input type="text" placeholder="NAME" className="w-full p-4 rounded-2xl outline-none font-bold text-xs uppercase dark:bg-zinc-900 border-none" value={productForm.name} onChange={(e) => setProductForm({...productForm, name: e.target.value})} required />
+                    <textarea placeholder="DESCRIPTION" className="w-full p-4 rounded-2xl outline-none font-bold text-xs uppercase dark:bg-zinc-900 border-none" value={productForm.description} onChange={(e) => setProductForm({...productForm, description: e.target.value})} required />
                     <div className="flex gap-4">
-                      <input type="number" placeholder="PRICE" className="w-1/2 p-4 rounded-2xl outline-none font-bold text-xs" value={productForm.price} onChange={(e) => setProductForm({...productForm, price: e.target.value})} required />
-                      <input type="number" placeholder="STOCK" className="w-1/2 p-4 rounded-2xl outline-none font-bold text-xs" value={productForm.stock} onChange={(e) => setProductForm({...productForm, stock: e.target.value})} required />
+                      <input type="number" placeholder="PRICE" className="w-1/2 p-4 rounded-2xl outline-none font-bold text-xs dark:bg-zinc-900 border-none" value={productForm.price} onChange={(e) => setProductForm({...productForm, price: e.target.value})} required />
+                      <input type="number" placeholder="STOCK" className="w-1/2 p-4 rounded-2xl outline-none font-bold text-xs dark:bg-zinc-900 border-none" value={productForm.stock} onChange={(e) => setProductForm({...productForm, stock: e.target.value})} required />
                     </div>
-                    <select className="w-full p-4 rounded-2xl outline-none font-black text-[10px] uppercase bg-white" value={productForm.category} onChange={(e) => setProductForm({...productForm, category: e.target.value})}>
+                    <select className="w-full p-4 rounded-2xl outline-none font-black text-[10px] uppercase bg-white dark:bg-zinc-900 border-none" value={productForm.category} onChange={(e) => setProductForm({...productForm, category: e.target.value})}>
                       <option value="Metal">Metal</option><option value="Glass">Glass</option><option value="Plastic">Plastic</option><option value="E-Waste">E-Waste</option><option value="Paper">Paper</option>
                     </select>
-                    <input type="text" placeholder="IMAGE URL" className="w-full p-4 rounded-2xl outline-none font-bold text-xs" value={productForm.imageUrl} onChange={(e) => setProductForm({...productForm, imageUrl: e.target.value})} required />
-                    <button type="submit" className="w-full bg-green-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-xl hover:bg-gray-950 transition-all">Publish Item 🚀</button>
+                    <input type="text" placeholder="IMAGE URL" className="w-full p-4 rounded-2xl outline-none font-bold text-xs dark:bg-zinc-900 border-none" value={productForm.imageUrl} onChange={(e) => setProductForm({...productForm, imageUrl: e.target.value})} required />
+                    <button type="submit" className="w-full bg-green-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-xl hover:bg-gray-950 dark:hover:bg-green-500 transition-all">Publish Item 🚀</button>
                   </form>
                 </div>
                 <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 h-[600px] overflow-y-auto pr-2">
                   {products.map((p) => (
-                    <div key={p._id} className="bg-white p-5 rounded-[2rem] border border-gray-100 flex items-center gap-4 relative group">
+                    <div key={p._id} className="bg-white dark:bg-zinc-950 p-5 rounded-[2rem] border border-gray-100 dark:border-zinc-800/60 flex items-center gap-4 relative group transition-colors">
                       <img src={p.imageUrl} alt="" className="w-16 h-16 rounded-2xl object-cover" />
                       <div className="flex-1 truncate">
-                        <h4 className="font-black text-gray-950 uppercase text-[10px]">{p.name}</h4>
-                        <p className="text-[11px] font-black text-green-600">₹{p.price}</p>
+                        <h4 className="font-black text-gray-950 dark:text-white uppercase text-[10px]">{p.name}</h4>
+                        <p className="text-[11px] font-black text-green-600 dark:text-green-400">₹{p.price}</p>
                       </div>
                       <button onClick={() => deleteProduct(p._id)} className="bg-red-50 text-red-500 p-3 rounded-xl opacity-0 group-hover:opacity-100 hover:bg-red-500 hover:text-white transition-all">🗑️</button>
                     </div>
@@ -265,26 +378,26 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* ECO ANALYTICS - DESIGN FIXED */}
+            {/* 5. ORIGINAL CONTEXT DECK: SUSTAINABILITY ENVIRONMENTAL ANALYTICS */}
             {activeTab === 'eco' && (
               <div className="space-y-10 py-5">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div className="p-10 bg-green-50 rounded-[3rem] border border-green-100 shadow-sm flex flex-col items-center justify-center transition-all hover:shadow-md">
-                    <span className="text-[10px] font-black text-green-800 uppercase tracking-widest mb-4">Total Pickups 🚛</span>
-                    <p className="text-6xl font-black text-green-600">{detailedImpact.pickups}</p>
+                  <div className="p-10 bg-green-50 dark:bg-green-950/10 rounded-[3rem] border border-green-100 dark:border-green-900/40 shadow-sm flex flex-col items-center justify-center transition-all hover:shadow-md">
+                    <span className="text-[10px] font-black text-green-800 dark:text-green-400 uppercase tracking-widest mb-4">Total Pickups 🚛</span>
+                    <p className="text-6xl font-black text-green-600 dark:text-green-400">{detailedImpact.pickups}</p>
                   </div>
-                  <div className="p-10 bg-orange-50 rounded-[3rem] border border-orange-100 shadow-sm flex flex-col items-center justify-center transition-all hover:shadow-md">
-                    <span className="text-[10px] font-black text-orange-800 uppercase tracking-widest mb-4">Waste KG ⚖️</span>
-                    <p className="text-6xl font-black text-orange-600">{detailedImpact.waste}</p>
+                  <div className="p-10 bg-orange-50 dark:bg-amber-950/10 rounded-[3rem] border border-orange-100 dark:border-amber-900/40 shadow-sm flex flex-col items-center justify-center transition-all hover:shadow-md">
+                    <span className="text-[10px] font-black text-orange-800 dark:text-orange-400 uppercase tracking-widest mb-4">Waste processed ⚖️</span>
+                    <p className="text-6xl font-black text-orange-600 dark:text-orange-400">{detailedImpact.waste} KG</p>
                   </div>
-                  <div className="p-10 bg-blue-50 rounded-[3rem] border border-blue-100 shadow-sm flex flex-col items-center justify-center transition-all hover:shadow-md">
-                    <span className="text-[10px] font-black text-blue-800 uppercase tracking-widest mb-4">Trees Saved 🌳</span>
-                    <p className="text-6xl font-black text-blue-600">{detailedImpact.trees}</p>
+                  <div className="p-10 bg-blue-50 dark:bg-blue-950/10 rounded-[3rem] border border-blue-100 dark:border-blue-900/40 shadow-sm flex flex-col items-center justify-center transition-all hover:shadow-md">
+                    <span className="text-[10px] font-black text-blue-800 dark:text-blue-400 uppercase tracking-widest mb-4">Trees Saved 🌳</span>
+                    <p className="text-6xl font-black text-blue-600 dark:text-blue-400">{detailedImpact.trees}</p>
                   </div>
                 </div>
-                {/* Visual Fillers to solve the empty space issue */}
+                
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="bg-gray-900 p-10 rounded-[2.5rem] text-white flex flex-col justify-center">
+                  <div className="bg-gray-900 dark:bg-zinc-950 p-10 rounded-[2.5rem] text-white flex flex-col justify-center border border-transparent dark:border-zinc-800">
                     <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-4 text-green-400 italic">Carbon Footprint Analysis</h4>
                     <p className="text-xs opacity-70 leading-relaxed font-bold">W2W platform logic consistently monitors the reduction of landfill waste. Current metrics indicate a positive trend in regional recycling efficiency.</p>
                   </div>
