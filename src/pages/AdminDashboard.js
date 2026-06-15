@@ -92,7 +92,7 @@ const AdminDashboard = () => {
 
   // NEW FEATURE ADDED: PURGE COMPLETED ORDER ROUTINE LIFECYCLE
   const deleteOrder = async (id) => {
-    if (!window.confirm("Machi, are you sure you want to permanently purge this completed record from system tracking? ⚠️")) return;
+    if (!window.confirm("Are you sure you want to permanently purge this completed record from system tracking? ⚠️")) return;
     try {
       await axios.delete(`${API_URL}/api/orders/admin/delete/${id}`);
       setOrders(prev => prev.filter(order => order._id !== id));
