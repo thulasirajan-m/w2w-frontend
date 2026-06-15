@@ -90,6 +90,19 @@ const AdminDashboard = () => {
     }
   };
 
+  // NEW FEATURE ADDED: PURGE COMPLETED ORDER ROUTINE LIFECYCLE
+  const deleteOrder = async (id) => {
+    if (!window.confirm("Machi, are you sure you want to permanently purge this completed record from system tracking? ⚠️")) return;
+    try {
+      await axios.delete(`${API_URL}/api/orders/admin/delete/${id}`);
+      setOrders(prev => prev.filter(order => order._id !== id));
+      alert("Completed transaction successfully purged from storage matrices! ✅");
+    } catch (err) {
+      console.error("Order Purge Error:", err.message);
+      alert("Purge operation failed. Verify backend query parameters mapping pipeline.");
+    }
+  };
+
   const handleReply = async (msg) => {
     const text = replyText[msg._id];
     if (!text) return alert("Please enter a response.");
@@ -185,10 +198,9 @@ const AdminDashboard = () => {
         {/* --- MAIN RENDERING PORT CONTAINER --- */}
         <div className="bg-white dark:bg-zinc-900 rounded-[2.5rem] shadow-2xl p-6 md:p-10 border border-gray-100 dark:border-zinc-800/80 min-h-[500px] transition-colors">
             
-            {/* 1. BRAND NEW ADDED: VIRTUAL CENTRAL VISUAL ANALYTICS BOARD */}
+            {/* 1. VIRTUAL CENTRAL VISUAL ANALYTICS BOARD */}
             {activeTab === 'dashboard' && (
               <div className="space-y-10 animate-fadeIn">
-                {/* 4 Cards Counter Metrics row banner */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   <div className="bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 group hover:border-green-500 transition-all">
                     <div className="text-2xl mb-2 group-hover:scale-110 transition-transform">♻️</div>
@@ -212,9 +224,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                {/* Sub-Split table & buyer cards row */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Left Table Box layout */}
                   <div className="lg:col-span-2 bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 overflow-x-auto">
                     <h3 className="text-base font-black uppercase tracking-tight italic mb-6">Live Waste Exchanges Monitor</h3>
                     <table className="w-full text-left min-w-[500px]">
@@ -247,7 +257,6 @@ const AdminDashboard = () => {
                     </table>
                   </div>
 
-                  {/* Right B2B Buyers Log Column card */}
                   <div className="bg-gray-50 dark:bg-zinc-950 p-6 rounded-3xl border border-gray-100 dark:border-zinc-800/60 space-y-4">
                     <h3 className="text-base font-black uppercase tracking-tight italic mb-2">Verified B2B Buyers</h3>
                     <div className="space-y-3">
@@ -266,7 +275,7 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* 2. ORIGINAL CONTEXT DECK: ORDERS MANAGEMENT DATA TABLE */}
+            {/* 2. ORDERS MANAGEMENT DATA TABLE WITH PURGE/DELETE ACTION FOR COMPLETED ITEMS */}
             {activeTab === 'orders' && (
               <div className="overflow-x-auto">
                 <table className="w-full text-left min-w-[800px]">
@@ -276,7 +285,7 @@ const AdminDashboard = () => {
                       <th className="pb-6">Description</th>
                       <th className="pb-6 text-center">Type</th>
                       <th className="pb-6">Status</th>
-                      <th className="pb-6 text-right">Actions</th>
+                      <th className="pb-6 text-right">Actions & Controls</th>
                     </tr>
                   </thead>
                   <tbody className="text-xs font-bold text-gray-700 dark:text-zinc-300">
@@ -294,13 +303,24 @@ const AdminDashboard = () => {
                             {order.status}
                           </span>
                         </td>
-                        <td className="py-6 text-right">
-                          <select value={order.status} onChange={(e) => updateStatus(order._id, e.target.value)} className="bg-gray-950 dark:bg-zinc-100 text-white dark:text-zinc-950 border-none rounded-xl p-2 text-[9px] font-black uppercase cursor-pointer hover:bg-green-600 dark:hover:bg-green-500 dark:hover:text-white">
+                        <td className="py-6 text-right flex items-center justify-end gap-3">
+                          <select value={order.status} onChange={(e) => updateStatus(order._id, e.target.value)} className="bg-gray-950 dark:bg-zinc-100 text-white dark:text-zinc-950 border-none rounded-xl p-2 text-[9px] font-black uppercase cursor-pointer hover:bg-green-600 dark:hover:bg-green-500 dark:hover:text-white outline-none">
                             <option value="">Update</option>
                             <option value="Verified">Verified ✅</option>
                             <option value="On the Way">On the Way 🚛</option>
                             <option value="Completed">Completed 🎖️</option>
                           </select>
+                          
+                          {/* FIXED & CONDITIONAL RENDER: SHOW PURGE TRASH ICON ONLY IF THE ORDER IS COMPLETED */}
+                          {order.status === 'Completed' && (
+                            <button 
+                              onClick={() => deleteOrder(order._id)} 
+                              title="Delete permanently from storage"
+                              className="bg-red-50 hover:bg-red-600 text-red-600 hover:text-white p-2.5 rounded-xl font-bold text-[9px] uppercase tracking-widest transition-all shadow-sm active:scale-90 border border-red-100/40"
+                            >
+                              🗑️ Purge
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -309,7 +329,7 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* 3. ORIGINAL CONTEXT DECK: USER QUERIES MAIL LOGIC BOX */}
+            {/* 3. USER QUERIES MAIL LOGIC BOX */}
             {activeTab === 'queries' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {messages.length > 0 ? messages.map((msg) => (
@@ -344,7 +364,7 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* 4. ORIGINAL CONTEXT DECK: B2C COMMERCE INVENTORY DECK */}
+            {/* 4. B2C COMMERCE INVENTORY DECK */}
             {activeTab === 'products' && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                 <div className="lg:col-span-1 bg-gray-50 dark:bg-zinc-950 p-8 rounded-[2.5rem] border border-gray-100 dark:border-zinc-800/80">
@@ -360,6 +380,7 @@ const AdminDashboard = () => {
                       <option value="Metal">Metal</option><option value="Glass">Glass</option><option value="Plastic">Plastic</option><option value="E-Waste">E-Waste</option><option value="Paper">Paper</option>
                     </select>
                     <input type="text" placeholder="IMAGE URL" className="w-full p-4 rounded-2xl outline-none font-bold text-xs dark:bg-zinc-900 border-none" value={productForm.imageUrl} onChange={(e) => setProductForm({...productForm, imageUrl: e.target.value})} required />
+                    <input type="hidden" />
                     <button type="submit" className="w-full bg-green-600 text-white py-4 rounded-2xl font-black uppercase text-xs shadow-xl hover:bg-gray-950 dark:hover:bg-green-500 transition-all">Publish Item 🚀</button>
                   </form>
                 </div>
@@ -378,7 +399,7 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* 5. ORIGINAL CONTEXT DECK: SUSTAINABILITY ENVIRONMENTAL ANALYTICS */}
+            {/* 5. SUSTAINABILITY ENVIRONMENTAL ANALYTICS */}
             {activeTab === 'eco' && (
               <div className="space-y-10 py-5">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
